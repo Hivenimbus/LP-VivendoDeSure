@@ -128,6 +128,10 @@ Localize a seção de preço no `index.html`:
 <span class="price-cents">,90</span>
 ```
 
+### Mensal vs Vitalício
+
+Caso queira alterar o texto de "Assinatura Mensal" de volta para "Vitalício", localize a classe `.price-info` no `index.html`.
+
 ## Funcionalidades
 
 - **FAQ Acordeão**: Clique nas perguntas para expandir/recolher
