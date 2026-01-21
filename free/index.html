@@ -87,8 +87,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
         a {
@@ -108,11 +106,7 @@
             width: 100%;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            padding: 40px 24px;
             overflow: hidden;
         }
 
@@ -120,12 +114,9 @@
         .free-bg {
             position: absolute;
             inset: 0;
-            background:
-                radial-gradient(ellipse at 50% 0%, rgba(157, 0, 255, 0.2) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 50%, rgba(157, 0, 255, 0.1) 0%, transparent 40%),
-                radial-gradient(ellipse at 20% 80%, rgba(157, 0, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(ellipse at 50% 100%, rgba(157, 0, 255, 0.15) 0%, transparent 50%);
             z-index: 0;
+            /* Diagonal Split Background */
+            background: linear-gradient(105deg, var(--bg-primary) 0%, var(--bg-primary) 45%, var(--bg-card) 45.1%, var(--bg-card) 100%);
         }
 
         .free-bg::before {
@@ -137,12 +128,37 @@
             pointer-events: none;
         }
 
+        /* Diagonal Line Accent */
+        .free-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 45%;
+            width: 2px;
+            background: var(--accent-primary);
+            transform: skewX(-15deg);
+            /* Match the gradient angle roughly if needed, or stick to linear-gradient edge */
+            /* Actually, relying on the gradient hard stop is cleaner. Adding a border line: */
+            background: linear-gradient(to bottom, transparent, var(--accent-primary), transparent);
+            width: 1px;
+            left: 45%;
+            transform-origin: bottom;
+            transform: skewX(-15deg);
+            /* This needs to be precise to match gradient */
+            display: none;
+            /* Removing separate line for now, sticking to clean cut */
+        }
+
+        /* Better Diagonal Border using a pseudo element on the content container if needed, or just the gradient */
+
         /* Floating Particles */
         .particles {
             position: absolute;
             inset: 0;
             overflow: hidden;
             z-index: 0;
+            pointer-events: none;
         }
 
         .particle {
@@ -155,6 +171,7 @@
             animation: float-particle 15s ease-in-out infinite;
         }
 
+        /* Positions adapted for full screen */
         .particle:nth-child(1) {
             left: 10%;
             top: 20%;
@@ -185,24 +202,6 @@
             animation-delay: 8s;
         }
 
-        .particle:nth-child(6) {
-            left: 90%;
-            top: 10%;
-            animation-delay: 1s;
-        }
-
-        .particle:nth-child(7) {
-            left: 5%;
-            top: 60%;
-            animation-delay: 3s;
-        }
-
-        .particle:nth-child(8) {
-            left: 70%;
-            top: 90%;
-            animation-delay: 5s;
-        }
-
         @keyframes float-particle {
 
             0%,
@@ -211,42 +210,63 @@
                 opacity: 0.3;
             }
 
-            25% {
-                transform: translateY(-30px) translateX(10px);
-                opacity: 0.6;
-            }
-
             50% {
-                transform: translateY(-15px) translateX(-15px);
-                opacity: 0.4;
-            }
-
-            75% {
-                transform: translateY(-40px) translateX(5px);
+                transform: translateY(-20px) translateX(10px);
                 opacity: 0.5;
             }
         }
 
-        /* Content Container */
-        .free-content {
-            position: relative;
-            z-index: 1;
-            max-width: 580px;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Logo */
-        .logo {
-            margin-bottom: 32px;
+        /* Split Layout Containers */
+        .split-container {
             display: flex;
-            justify-content: center;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
         }
 
-        .logo-img {
-            height: 60px;
-            width: auto;
-            object-fit: contain;
+        .left-panel {
+            flex: 0 0 45%;
+            /* Matches the 45% in gradient */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 40px;
+        }
+
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Centered vertically */
+            padding: 40px 60px;
+            position: relative;
+        }
+
+        /* Logo in Left Panel */
+        .logo-large {
+            width: 100%;
+            max-width: 400px;
+            animation: float-logo 6s ease-in-out infinite;
+        }
+
+        @keyframes float-logo {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Right Panel Content */
+        .content-box {
+            max-width: 600px;
+            width: 100%;
         }
 
         /* Alert Badge */
@@ -260,7 +280,7 @@
             color: #FFD700;
             background: rgba(255, 215, 0, 0.1);
             border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 50px;
             margin-bottom: 24px;
             animation: pulse-badge 2s ease-in-out infinite;
@@ -274,31 +294,8 @@
             }
 
             50% {
-                box-shadow: 0 0 20px 5px rgba(255, 215, 0, 0.2);
+                box-shadow: 0 0 15px 3px rgba(255, 215, 0, 0.15);
             }
-        }
-
-        /* Main Card */
-        .free-card {
-            background: var(--bg-card);
-            border: 2px solid var(--accent-primary);
-            border-radius: var(--radius-lg);
-            padding: 48px 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .free-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200%;
-            height: 200px;
-            background: radial-gradient(ellipse at center top, var(--accent-glow) 0%, transparent 70%);
-            opacity: 0.3;
-            pointer-events: none;
         }
 
         /* Section Tag */
@@ -310,21 +307,21 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             color: var(--accent-primary);
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: var(--accent-subtle);
             border: 1px solid var(--border-accent);
             border-radius: 50px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         /* Title */
         .free-title {
             font-family: var(--font-secondary);
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-size: clamp(2rem, 4vw, 3.5rem);
             font-weight: 800;
-            line-height: 1.15;
+            line-height: 1.1;
             margin-bottom: 24px;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
         }
 
         .gradient-text {
@@ -336,13 +333,11 @@
 
         /* Description */
         .free-description {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            line-height: 1.8;
+            line-height: 1.7;
             margin-bottom: 32px;
-            max-width: 480px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 90%;
         }
 
         .free-description strong {
@@ -353,33 +348,35 @@
         .features-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 32px;
-            text-align: left;
+            gap: 16px;
+            margin-bottom: 40px;
         }
 
         .feature-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+            gap: 16px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            /* Made brighter */
+            font-weight: 500;
         }
 
         .feature-icon {
             flex-shrink: 0;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 6px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(157, 0, 255, 0.3);
         }
 
         .feature-icon svg {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             stroke: var(--text-primary);
         }
 
@@ -390,15 +387,30 @@
             justify-content: center;
             gap: 12px;
             width: 100%;
-            padding: 20px 32px;
+            max-width: 400px;
+            padding: 22px 32px;
             font-family: var(--font-secondary);
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             border-radius: var(--radius-md);
             transition: all var(--transition-medium);
             cursor: pointer;
             border: none;
+            text-transform: uppercase;
+        }
+
+        /* Align button right container */
+        .btn-container {
+            width: 100%;
+            /* User asked for button on the right, but in a right panel context, usually nice left aligned or full. 
+                "botao abaixo tambem na direita" -> implies right alignment of the button itself? 
+                Or simply that it is in the right panel. Let's make it fill or left align in the right panel.
+                Standard web design usually aligns text left in this layout. 
+                I will stick to Left Alignment within the Right Panel as it reads better, 
+                but I will ensure it has presence. */
+            display: flex;
+            justify-content: flex-start;
         }
 
         .btn-primary {
@@ -406,98 +418,127 @@
             color: var(--text-primary);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border-radius: inherit;
-            z-index: -1;
-            animation: pulse-glow-green 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow-green {
-
-            0%,
-            100% {
-                opacity: 0.5;
-                filter: blur(10px);
-            }
-
-            50% {
-                opacity: 0.8;
-                filter: blur(20px);
-            }
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
         }
 
         .btn-primary svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             fill: currentColor;
         }
 
-        /* Trust Badges */
+        /* Trust Badges - Horizontal Row */
         .trust-badges {
             display: flex;
-            justify-content: center;
             gap: 24px;
             flex-wrap: wrap;
-            margin-top: 24px;
+            margin-top: 32px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
 
         .trust-badge {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .trust-badge svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--text-muted);
         }
 
         /* Footer */
-        .free-footer {
-            margin-top: 40px;
-            text-align: center;
+        .footer-mobile {
+            display: none;
+            /* Only show on mobile */
         }
 
-        .free-footer p {
+        .footer-desktop {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
             font-size: 0.8rem;
             color: var(--text-muted);
+            opacity: 0.5;
+            z-index: 2;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .free-page {
-                padding: 24px 16px;
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 900px) {
+            .free-bg {
+                /* Reset gradient for vertical stack */
+                background: var(--bg-primary);
             }
 
-            .free-card {
-                padding: 32px 24px;
+            .split-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
             }
 
-            .alert-badge {
-                font-size: 0.8rem;
-                padding: 10px 18px;
+            .left-panel {
+                flex: none;
+                width: 100%;
+                padding: 40px 24px;
+                background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+                /* Diagonal cut on bottom of header */
+                clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+                padding-bottom: 60px;
+            }
+
+            .right-panel {
+                flex: none;
+                width: 100%;
+                padding: 40px 24px;
+                background: var(--bg-card);
+                margin-top: -40px;
+                /* Overlap slightly */
+                padding-top: 60px;
+            }
+
+            .logo-large {
+                max-width: 200px;
+            }
+
+            .free-title {
+                font-size: 2rem;
+            }
+
+            .content-box {
+                text-align: center;
+                margin: 0 auto;
             }
 
             .features-list {
-                gap: 10px;
+                align-items: flex-start;
+                /* Keep list aligned left but centered block? */
+                display: inline-flex;
+                text-align: left;
             }
 
             .trust-badges {
-                gap: 16px;
+                justify-content: center;
+            }
+
+            .btn-container {
+                justify-content: center;
+            }
+
+            .footer-desktop {
+                display: none;
+            }
+
+            .footer-mobile {
+                display: block;
+                text-align: center;
+                margin-top: 40px;
+                color: var(--text-muted);
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -515,113 +556,116 @@
             <div class="particle"></div>
             <div class="particle"></div>
             <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
         </div>
 
-        <!-- Content -->
-        <div class="free-content">
-            <!-- Logo -->
-            <div class="logo">
-                <img src="../assets/images/Logo VivendoDeSure.png" alt="VivendoDeSure Logo" class="logo-img">
+        <div class="split-container">
+            <!-- LEFT PANEL: LOGO -->
+            <div class="left-panel">
+                <img src="../assets/images/Logo VivendoDeSure.png" alt="VivendoDeSure Logo" class="logo-large">
             </div>
 
-            <!-- Alert Badge -->
-            <div class="alert-badge">
-                <span>⚠️</span>
-                <span>Restam somente 20 vagas</span>
-            </div>
+            <!-- RIGHT PANEL: CONTENT -->
+            <div class="right-panel">
+                <div class="content-box">
 
-            <!-- Main Card -->
-            <div class="free-card">
-                <span class="section-tag">100% GRATUITO</span>
-
-                <h1 class="free-title">
-                    ACESSO EXCLUSIVO AO <span class="gradient-text">GRUPO FREE</span>
-                </h1>
-
-                <p class="free-description">
-                    Sua entrada liberada para o grupo onde entregamos <strong>estratégias que funcionam</strong>,
-                    análises em tempo real e técnicas para converter seu conhecimento em <strong>ganhos
-                        concretos</strong> — com acompanhamento diário e resultados que você pode medir.
-                </p>
-
-                <!-- Features -->
-                <ul class="features-list">
-                    <li class="feature-item">
-                        <span class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <path d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
-                        <span>Conteúdo exclusivo todos os dias</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <path d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
-                        <span>Suporte diário para suas dúvidas</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <path d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
-                        <span>Resultados consistentes e validados</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <path d="M5 13l4 4L19 7" />
-                            </svg>
-                        </span>
-                        <span>Sem custo algum para participar</span>
-                    </li>
-                </ul>
-
-                <!-- CTA Button -->
-                <a href="https://chat.whatsapp.com/BeHEec7GcYZCx3qz883xRt" class="btn btn-primary" target="_blank"
-                    rel="noopener">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
-                    <span>GARANTA SUA VAGA</span>
-                </a>
-
-                <!-- Trust Badges -->
-                <div class="trust-badges">
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        <span>Acesso Imediato</span>
+                    <!-- Alert Badge -->
+                    <div class="alert-badge">
+                        <span>⚠️</span>
+                        <span>Restam somente 20 vagas</span>
                     </div>
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <span>100% Seguro</span>
+
+                    <div style="margin-bottom: 10px;">
+                        <span class="section-tag">100% GRATUITO</span>
                     </div>
-                    <div class="trust-badge">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span>Comunidade Ativa</span>
+
+                    <h1 class="free-title">
+                        ACESSO EXCLUSIVO AO <br>
+                        <span class="gradient-text">GRUPO FREE</span>
+                    </h1>
+
+                    <p class="free-description">
+                        Sua entrada liberada para o grupo onde entregamos <strong>estratégias que funcionam</strong>,
+                        análises em tempo real e técnicas para converter seu conhecimento em <strong>ganhos
+                            concretos</strong>.
+                    </p>
+
+                    <!-- Features -->
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            <span>Conteúdo exclusivo todos os dias</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            <span>Suporte diário para suas dúvidas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <path d="M5 13l4 4L19 7" />
+                                </svg>
+                            </span>
+                            <span>Resultados consistentes e validados</span>
+                        </li>
+                    </ul>
+
+                    <!-- CTA Button -->
+                    <div class="btn-container">
+                        <a href="https://chat.whatsapp.com/BeHEec7GcYZCx3qz883xRt" class="btn btn-primary"
+                            target="_blank" rel="noopener">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                            </svg>
+                            <span>GARANTA SUA VAGA</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <span>Acesso Imediato</span>
+                        </div>
+                        <div class="trust-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            <span>100% Seguro</span>
+                        </div>
+                        <div class="trust-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857" />
+                            </svg>
+                            <span>Comunidade Ativa</span>
+                        </div>
+                    </div>
+
+                    <div class="footer-mobile">
+                        <p>Copyright © 2026 VivendoDeSure. Todos os direitos reservados.</p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Footer -->
-            <div class="free-footer">
-                <p>Copyright © 2026 VivendoDeSure. Todos os direitos reservados.</p>
-            </div>
+        <!-- Desktop Footer -->
+        <div class="footer-desktop">
+            <p>Copyright © 2026 VivendoDeSure. Todos os direitos reservados.</p>
         </div>
     </section>
 </body>
